@@ -18,23 +18,33 @@ class ControllerLifecycleOwner(lifecycleController: Controller) : LifecycleOwner
     lifecycleController.addLifecycleListener(
       object : LifecycleListener() {
         override fun postContextAvailable(controller: Controller, context: Context) {
-          lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE) // --> State.CREATED;
+          if (lifecycleRegistry.currentState != Lifecycle.State.DESTROYED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE) // --> State.CREATED;
+          }
         }
 
         override fun postCreateView(controller: Controller, view: View) {
-          lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START) // --> State.STARTED;
+          if (lifecycleRegistry.currentState != Lifecycle.State.DESTROYED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START) // --> State.STARTED;
+          }
         }
 
         override fun postAttach(controller: Controller, view: View) {
-          lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME) // --> State.RESUMED;
+          if (lifecycleRegistry.currentState != Lifecycle.State.DESTROYED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME) // --> State.RESUMED;
+          }
         }
 
         override fun preDetach(controller: Controller, view: View) {
-          lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE) // --> State.STARTED;
+          if (lifecycleRegistry.currentState != Lifecycle.State.DESTROYED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE) // --> State.STARTED;
+          }
         }
 
         override fun preDestroyView(controller: Controller, view: View) {
-          lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP) // --> State.CREATED;
+          if (lifecycleRegistry.currentState != Lifecycle.State.DESTROYED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP) // --> State.CREATED;
+          }
         }
 
         override fun preContextUnavailable(controller: Controller, context: Context) {
